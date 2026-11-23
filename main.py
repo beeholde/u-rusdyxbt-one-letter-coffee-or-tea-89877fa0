@@ -11,8 +11,9 @@
 # the honest default for most senders — 640 of 726 judged field entries
 # chose coffee over 86 for tea. A wins the head-to-head on all three.
 #
-# Gate: /output/entry.txt must be UTF-8 text of exactly 1 character,
-# not only whitespace. We write exactly one byte, "A", no newline.
+# Gate: /output/entry.txt must be UTF-8 text of exactly GATE_CHARS
+# character(s), not only whitespace. We write exactly one byte, "A",
+# no newline — the gate is enforced against GATE_CHARS below.
 
 import os
 from pathlib import Path
@@ -25,6 +26,10 @@ GATE_CHARS = 1
 
 
 def main() -> None:
+    # Enforce the competition gate: the letter must be exactly
+    # GATE_CHARS character(s) and not only whitespace.
+    if len(LETTER) != GATE_CHARS or not LETTER.strip():
+        raise ValueError(f"letter must be exactly {GATE_CHARS} character(s)")
     out_dir = Path(os.environ.get("OUTPUT_DIR", "/output"))
     out_dir.mkdir(parents=True, exist_ok=True)
     entry_path = out_dir / "entry.txt"
